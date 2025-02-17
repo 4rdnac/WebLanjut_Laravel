@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ItemController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function () {// Rute untuk halaman utama (welcome page)
     return view('welcome');
 });
+
+Route::resource('items', ItemController::class);// Rute resource untuk ItemController
