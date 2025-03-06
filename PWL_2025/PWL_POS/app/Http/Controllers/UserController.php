@@ -20,13 +20,17 @@ class UserController extends Controller
             //  'username'=>'manager_2',
             //  'nama'=>'Manager 2',
             //  'password'=>Hash::make('12345')
-            'level_id' => 2,
-            'username' => 'manager_3',
-            'nama' => 'Manager 3',
-            'password' => Hash::make('12345')
+            // 'level_id' => 2,
+            // 'username' => 'manager_3',
+            // 'nama' => 'Manager 3',
+            // 'password' => Hash::make('12345')
         ];
-        UserModel::create($data);
-        $user = UserModel::all();
+        // UserModel::create($data);
+        // $user = UserModel::where(1);
+        // $user = UserModel::where('level_id',1)->first();
+        // $user = UserModel::firstWhere('level_id',1);
+        $user = UserModel::findOr(20, ['username', 'nama'], function () {
+            abort(404); });
         return view('user', ['data' => $user]);
     }
 }
