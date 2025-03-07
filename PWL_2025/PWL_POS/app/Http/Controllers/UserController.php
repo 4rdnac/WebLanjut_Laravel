@@ -32,7 +32,7 @@ class UserController extends Controller
 
     public function ubah($id)
     {
-        $user = UserModel::find($id);
+        $user = UserModel::with('level')->get();
         return view('user_ubah', ['data' => $user]);
     }
 
