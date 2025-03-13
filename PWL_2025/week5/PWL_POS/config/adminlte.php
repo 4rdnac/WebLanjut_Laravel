@@ -311,6 +311,7 @@ return [
         ],
 
         // Sidebar items:
+        
         [
             'type' => 'sidebar-menu-search',
             'text' => 'search',
@@ -319,6 +320,10 @@ return [
             'text' => 'blog',
             'url' => 'admin/blog',
             'can' => 'manage-blog',
+        ],
+        [
+            'text' => 'Manage Kategori',
+            'url'  => '/kategori',
         ],
         [
             'text' => 'pages',
