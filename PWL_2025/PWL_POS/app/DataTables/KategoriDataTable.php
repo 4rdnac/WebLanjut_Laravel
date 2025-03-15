@@ -21,20 +21,19 @@ class KategoriDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addColumn('action', function ($row) {
-                return '<div style="display: flex; gap: 5px; align-items: center;">
-                            <a href="' . route('kategori.edit', $row->kategori_id) . '">Edit</a>
-                            <form action="' . route('kategori.destroy', $row->kategori_id) . '" method="POST" style="display:inline-block; margin:0;" onsubmit="return confirm(\'Yakin ingin menghapus?\')">
-                                ' . csrf_field() . '
-                                ' . method_field("DELETE") . '
-                                <button type="submit" style="border:none; background:none; color:inherit; cursor:pointer;">Delete</button>
-                            </form>
-                        </div>';
+                return '<div class="text-end" style="display: flex; justify-content: flex-end; gap: 5px; align-items: center;">
+                        <a href="' . route('kategori.edit', $row->kategori_id) . '" class="btn btn-warning btn-sm">Ubah</a>
+                        <form action="' . route('kategori.destroy', $row->kategori_id) . '" method="POST" style="display:inline-block; margin:0;" onsubmit="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
+                            ' . csrf_field() . '
+                            ' . method_field("DELETE") . '
+                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                        </form>
+                    </div>';
             })
             ->rawColumns(['action'])
-            ->setRowId('id');
+            ->setRowId('kategori_id');
     }
-    
-    
+
 
     /**
      * Get the query source of dataTable.
@@ -68,20 +67,21 @@ class KategoriDataTable extends DataTable
      * Get the dataTable columns definition.
      */
     public function getColumns(): array
-    {
-        return [
-            Column::computed('action')
-                ->exportable(false)
-                ->printable(false)
-                ->width(60)
-                ->addClass('text-center'),
-            Column::make('kategori_id'),
-            Column::make('kategori_kode'),
-            Column::make('kategori_nama'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
-        ];
-    }
+{
+    return [
+        Column::make('kategori_id')->title('Kategori Id'),
+        Column::make('kategori_kode')->title('Kategori Kode'),
+        Column::make('kategori_nama')->title('Kategori Nama'),
+        Column::make('created_at')->title('Created At'),
+        Column::make('updated_at')->title('Updated At'),
+        Column::computed('action')
+            ->exportable(false)
+            ->printable(false)
+            ->width(100)
+            ->addClass('text-end')
+    ];
+}
+
 
     /**
      * Get the filename for export.

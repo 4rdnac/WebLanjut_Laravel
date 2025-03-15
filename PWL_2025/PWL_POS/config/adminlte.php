@@ -326,6 +326,10 @@ return [
             'url'  => '/kategori',
         ],
         [
+            'text' => 'Manage Level User',
+            'url'  => '/level',
+        ],
+        [
             'text' => 'pages',
             'url' => 'admin/pages',
             'icon' => 'far fa-fw fa-file',

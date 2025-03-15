@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserModel;
+use App\Models\LevelModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -10,13 +11,14 @@ class UserController extends Controller
 {
     public function index()
     {
-        $user = UserModel::all();
-        return view('user', ['data' => $user]);
+        $user = UserModel::with('level')->get();
+        return view('user.index', ['data' => $user]);
     }
 
     public function tambah()
     {
-        return view('user_tambah');
+        $levels = LevelModel::all();
+        return view('user.tambah', ['levels' => $levels]);
     }
 
     public function tambah_simpan(Request $request)
@@ -24,7 +26,7 @@ class UserController extends Controller
         UserModel::create([
             'username' => $request->username,
             'nama' => $request->nama,
-            'password' => Hash::make('$request->password'),
+            'password' => Hash::make($request->password),
             'level_id' => $request->level_id
         ]);
         return redirect('/user');
@@ -32,8 +34,9 @@ class UserController extends Controller
 
     public function ubah($id)
     {
-        $user = UserModel::with('level')->get();
-        return view('user_ubah', ['data' => $user]);
+        $user = UserModel::find($id);
+        $levels = LevelModel::all();
+        return view('user.ubah', ['data' => $user, 'levels' => $levels]);
     }
 
     public function ubah_simpan($id, Request $request)
@@ -41,7 +44,9 @@ class UserController extends Controller
         $user = UserModel::find($id);
         $user->username = $request->username;
         $user->nama = $request->nama;
-        $user->password = Hash::make('$request->password');
+        if ($request->password) {
+            $user->password = Hash::make($request->password);
+        }
         $user->level_id = $request->level_id;
 
         $user->save();
