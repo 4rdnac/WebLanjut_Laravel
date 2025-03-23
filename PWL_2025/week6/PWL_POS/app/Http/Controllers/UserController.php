@@ -122,6 +122,13 @@ class UserController extends Controller
         return view('user.show', ['breadcrumb' => $breadcrumb, 'page' => $page, 'user' => $user, 'activeMenu' => $activeMenu]);
     }
 
+    public function show_ajax(string $id)
+    {
+        $user = UserModel::with('level')->find($id);
+
+        return view('user.show_ajax', ['user' => $user]);
+    }
+
     public function edit(string $id)
     {
         $user = UserModel::find($id);
@@ -174,7 +181,34 @@ class UserController extends Controller
             return redirect('/user')->with('error', 'User tidak dapat dihapus karena masih terhubung dengan data lain');
         }
     }
+    
+    public function confirm_ajax(string $id)
+    {
+        $user = UserModel::find($id);
 
+        return view('user.confirm_ajax', ['user' => $user]);
+    }
+
+    public function delete_ajax(request $request, $id)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $user = UserModel::find($id);
+            if ($user) {
+                $user->delete();
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data berhasil dihapus'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan'
+                ]);
+            }
+        }
+
+        return redirect('/');
+    }
     public function create_ajax()
     {
         $level = LevelModel::select('level_id', 'level_nama')->get();
