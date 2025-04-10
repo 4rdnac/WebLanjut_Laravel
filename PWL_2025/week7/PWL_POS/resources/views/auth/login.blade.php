@@ -59,6 +59,8 @@
                         <!-- /.col -->
                     </div>
                 </form>
+                <p class="mt-4 mb-0 text-center">
+                    Belum terdaftar? <a href="{{ url('register') }}" >Buat Akun</a>
             </div>
             <!-- /.card-body -->
         </div>
