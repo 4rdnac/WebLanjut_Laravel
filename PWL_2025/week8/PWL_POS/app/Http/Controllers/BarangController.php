@@ -8,6 +8,7 @@ use App\Models\KategoriModel;
 use Yajra\DataTables\Facades\DataTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BarangController extends Controller
 {
@@ -361,13 +362,14 @@ class BarangController extends Controller
         return redirect('/');
     }
 
-    public function export_excel(){
+    public function export_excel()
+    {
         // 1. ambil data barang yang akan di export
-        $barang = BarangModel::select('kategori_id','barang_kode','barang_nama','harga_beli','harga_jual')
-                    ->orderBy('kategori_id')
-                    ->with('kategori')
-                    ->get();
-        
+        $barang = BarangModel::select('kategori_id', 'barang_kode', 'barang_nama', 'harga_beli', 'harga_jual')
+            ->orderBy('kategori_id')
+            ->with('kategori')
+            ->get();
+
         // 2. load library excel
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet(); // ambil sheet yang aktif
@@ -386,38 +388,52 @@ class BarangController extends Controller
         $baris = 2; //baris data dimulai dari baris ke 2
 
         foreach ($barang as $key => $value) {
-            $sheet->setCellValue('A'.$baris, $no);
-            $sheet->setCellValue('B'.$baris, $value->barang_kode);
-            $sheet->setCellValue('C'.$baris, $value->barang_nama);
-            $sheet->setCellValue('D'.$baris, $value->harga_beli);
-            $sheet->setCellValue('E'.$baris, $value->harga_jual);
-            $sheet->setCellValue('F'.$baris, $value->kategori->kategori_nama); //ambil nama kategori
+            $sheet->setCellValue('A' . $baris, $no);
+            $sheet->setCellValue('B' . $baris, $value->barang_kode);
+            $sheet->setCellValue('C' . $baris, $value->barang_nama);
+            $sheet->setCellValue('D' . $baris, $value->harga_beli);
+            $sheet->setCellValue('E' . $baris, $value->harga_jual);
+            $sheet->setCellValue('F' . $baris, $value->kategori->kategori_nama); //ambil nama kategori
             $baris++;
             $no++;
         }
 
         // 4.
-        foreach(range('A','F') as $columnID){
+        foreach (range('A', 'F') as $columnID) {
             $sheet->getColumnDimension($columnID)->setAutoSize(true); // set auto size untuk kolom
         }
 
         // 5.
         $sheet->setTitle('Data Barang'); // set title sheet
-        
+
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $filename = 'Data Barang '.date('Y-m-d H:i:s').'.xlsx';
+        $filename = 'Data Barang ' . date('Y-m-d H:i:s') . '.xlsx';
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="'.$filename.'"');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
         header('Cache-Control: max-age=1');
         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-        header('Last-Modified: '. gmdate('D, d M Y H:i:s'). ' GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
         header('Cache-Control: cache, must-revalidate');
         header('Pragma: public');
 
         $writer->save('php://output');
         exit;
+    }
 
+    public function export_pdf(){
+        $barang = BarangModel::select('kategori_id','barang_kode','barang_nama','harga_beli','harga_jual')
+                    ->orderBy('kategori_id')
+                    ->orderBy('barang_kode')
+                    ->with('kategori')
+                    ->get();
+
+    $pdf = Pdf::loadView('barang.export_pdf',['barang' => $barang]);
+    $pdf->setPaper('a4','portrait'); // set ukuran kertas dan orientasi
+    $pdf->setOption("isRemoteEnabled", true); // set true jika ada gambar dari url
+    $pdf->render();
+
+    return $pdf->stream('Data Barang '. date('Y-m-d H:i:s'). '.pdf');
     }
 }
