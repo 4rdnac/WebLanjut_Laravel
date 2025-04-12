@@ -1,32 +1,71 @@
-@extends('layouts.app')
+@extends('layouts.template')
 
-{{-- Customize layout sections --}}
-@section('subtitle', 'Kategori')
-@section('content_header_title', 'Kategori')
-@section('content_header_subtitle', 'Create')
-
-{{-- Content body: main page content --}}
 @section('content')
-<div class="container">
-    <div class="card card-primary">
+    <div class="card card-outline card-primary">
         <div class="card-header">
-            <h3 class="card-title">Buat kategori baru</h3>
+            <h3 class="card-title">Daftar Kategori</h3>
+            <div class="card-tools">
+                <a class="btn btn-sm btn-primary mt-1" href="{{ url('kategori/create') }}">Tambah</a>
+            </div>
         </div>
-        <form method="post" action="../kategori">
-            <div class="card-body">
-                <div class="form-group">
-                    <label for="kodeKategori">Kode Kategori</label>
-                    <input type="text" class="form-control" id="kodeKategori" name="kodeKategori" placeholder="Masukkan kode kategori">
-                </div>
-                <div class="form-group">
-                    <label for="namaKategori">Nama Kategori</label>
-                    <input type="text" class="form-control" id="namaKategori" name="namaKategori" placeholder="Masukkan nama kategori">
-                </div>
-            </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </form>
+        <div class="card-body">
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+            @if (session('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
+            <table class="table table-bordered table-striped table-hover table-sm" id="table_kategori">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Kode Kategori</th>
+                        <th>Nama Kategori</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
-</div>
 @endsection
+
+@push('css')
+@endpush
+
+@push('js')
+    <script>
+        $(document).ready(function () {
+            var dataKategori = $('#table_kategori').DataTable({
+                serverSide: true,
+                ajax: {
+                    "url": "{{ url('kategori/list') }}",
+                    "dataType": "json",
+                    "type": "POST"
+                },
+                columns: [
+                    {
+                        data: "DT_RowIndex",
+                        className: "text-center",
+                        orderable: false,
+                        searchable: false
+                    }, {
+                        data: "kategori_kode",
+                        className: "",
+                        orderable: true,
+                        searchable: true
+                    }, {
+                        data: "kategori_nama",
+                        className: "",
+                        orderable: true,
+                        searchable: true
+                    }, {
+                        data: "aksi",
+                        className: "",
+                        orderable: false,
+                        searchable: false
+                    }
+                ]
+            });
+        }); 
+    </script>
+@endpush

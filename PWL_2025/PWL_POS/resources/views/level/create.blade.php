@@ -1,34 +1,71 @@
-@extends('layouts.app')
+@extends('layouts.template')
 
-{{-- Customize layout sections --}}
-@section('subtitle', 'Level')
-@section('content_header_title', 'Level')
-@section('content_header_subtitle', 'Create')
-
-{{-- Content body: main page content --}}
 @section('content')
-<div class="container">
-    <div class="card card-primary">
+    <div class="card card-outline card-primary">
         <div class="card-header">
-            <h3 class="card-title">Buat level baru</h3>
+            <h3 class="card-title">Daftar Level Pengguna</h3>
+            <div class="card-tools">
+                <a class="btn btn-sm btn-primary mt-1" href="{{ url('level/create') }}">Tambah</a>
+            </div>
         </div>
-        <form method="post" action="{{ route('level.store') }}">
-            @csrf
-            <div class="card-body">
-                <div class="form-group">
-                    <label for="levelKode">Kode Level</label>
-                    <input type="text" class="form-control" id="levelKode" name="levelKode" placeholder="Masukkan kode level">
-                </div>
-                <div class="form-group">
-                    <label for="levelNama">Nama Level</label>
-                    <input type="text" class="form-control" id="levelNama" name="levelNama" placeholder="Masukkan nama level">
-                </div>
-            </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <a href="{{ route('level.index') }}" class="btn btn-secondary">Batal</a>
-            </div>
-        </form>
+        <div class="card-body">
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+            @if (session('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
+            <table class="table table-bordered table-striped table-hover table-sm" id="table_level">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Kode Level</th>
+                        <th>Nama Level</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
-</div>
 @endsection
+
+@push('css')
+@endpush
+
+@push('js')
+    <script>
+        $(document).ready(function () {
+            var dataLevel = $('#table_level').DataTable({
+                serverSide: true,
+                ajax: {
+                    "url": "{{ url('level/list') }}",
+                    "dataType": "json",
+                    "type": "POST"
+                },
+                columns: [
+                    {
+                        data: "DT_RowIndex",
+                        className: "text-center",
+                        orderable: false,
+                        searchable: false
+                    }, {
+                        data: "level_kode",
+                        className: "",
+                        orderable: true,
+                        searchable: true
+                    }, {
+                        data: "level_nama",
+                        className: "",
+                        orderable: true,
+                        searchable: true
+                    }, {
+                        data: "aksi",
+                        className: "",
+                        orderable: false,
+                        searchable: false
+                    }
+                ]
+            });
+        }); 
+    </script>
+@endpush
