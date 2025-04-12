@@ -4,9 +4,9 @@
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
-                <a class="btn btn-sm btn-primary mt-1" href="{{ url('user/create') }}">Tambah User</a>
-                <button onclick="modalAction( '{{ url('user/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah
-                    Ajax</button>
+                <button onclick="modalAction('{{ url('user/create_ajax') }}')" class="btn btn-sm btn-success mt-1">
+                    <i class="fas fa-plus" style="margin-right: 5px;"></i>Tambah User
+                </button>
             </div>
         </div>
         <div class="card-body">

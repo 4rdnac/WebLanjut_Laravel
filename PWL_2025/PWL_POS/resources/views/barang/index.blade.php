@@ -11,9 +11,9 @@
                     Export Barang</a>
                 <a href="{{ url('/barang/export_pdf') }}" class="btn btn-sm btn-warning"><i class="fa fa-file-pdf"></i>
                     Export Barang</a>
-                <button onclick="modalAction('{{ url('barang/create_ajax') }}')" class="btn btn-sm btn-success">
-                    Tambah Ajax
-                </button>
+                    <button onclick="modalAction('{{ url('barang/create_ajax') }}')" class="btn btn-sm btn-success">
+                        <i class="fas fa-plus" style="margin-right: 5px;"></i>Tambah Barang
+                    </button>
             </div>
         </div>
         <div class="card-body">
