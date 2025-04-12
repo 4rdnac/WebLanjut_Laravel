@@ -16,16 +16,15 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group row">
-                            <label class="col-1 control-label col-form-label">Filter:</label>
+                            <label class="col-1 control-label col-form-label">User:</label>
                             <div class="col-3">
-                                <select class="form-control" id="user_id" name="user_id" required>
+                                <select class="form-control" id="user_id" name="user_id">
                                     <option value="">- Semua -</option>
-                                    @foreach ($barang as $item)
+                                    @foreach ($user as $item)
                                         <option value="{{ $item->user_id }}">{{ $item->nama }}</option>
                                     @endforeach
                                 </select>
-                                <small class="form-text text-muted">List User</small>
-                            </div>
+                            </div>                 
                         </div>
                     </div>
                 </div>
