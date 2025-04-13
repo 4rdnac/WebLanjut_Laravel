@@ -62,7 +62,7 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
       });
    });
 
-   Route::middleware(['authorize:ADM,MNG'])->group(function () {
+   Route::middleware(['authorize:ADM,MNG,STF'])->group(function () {
       Route::group(['prefix' => 'barang'], function () {
          Route::get('/', [BarangController::class, 'index']);
          Route::post('/list', [BarangController::class, 'list']);

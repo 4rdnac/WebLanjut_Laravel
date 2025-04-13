@@ -80,7 +80,7 @@
     <div class="register-box">
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <a href="{{ url('/') }}" class="h1">PWL POS</a>
+                <a href="{{ url('/') }}" class="h1"><b>PWL POS</a>
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Daftarkan akun baru Anda</p>
@@ -91,7 +91,7 @@
                         <select name="level_id" id="level_id" class="form-control">
                             <option value="">- Pilih Level User -</option>
                             @foreach($level as $item)
-                            <option value="{{ $item->level_id }}">{{ $item->level_nama }}</option>
+                                <option value="{{ $item->level_id }}">{{ $item->level_nama }}</option>
                             @endforeach
                         </select>
                         <div class="input-group-append">
@@ -114,7 +114,8 @@
                         <small id="error-nama" class="error-text"></small>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="password" id="password" name="password" class="form-control" placeholder="Password">
+                        <input type="password" id="password" name="password" class="form-control"
+                            placeholder="Password">
                         <div class="input-group-append">
                             <div class="input-group-text"><span class="fas fa-lock"></span></div>
                         </div>
@@ -122,7 +123,7 @@
                     </div>
                     <div class="row">
                         <div class="col-8">
-                            <a href="{{ url('login') }}" class="text-center">Sudah punya akun?</a>
+                            <p > <a href="{{ url('login') }}" class="text-center">Sudah punya akun?</a></p>
                         </div>
                         <div class="col-4">
                             <button type="submit" class="btn btn-primary btn-block">Register</button>
