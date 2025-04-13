@@ -3,8 +3,9 @@
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Kesalahan</h5>
-            <button type="button" class="close" data-dismiss="modal" aria
-                label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
         <div class="modal-body">
             <div class="alert alert-danger">
@@ -16,15 +17,16 @@
     </div>
 </div>
 @else
-<form action="{{ url('/user/' . $user->user_id.'/update_ajax') }}" method="POST" id="form-edit">
+<form action="{{ url('/user/' . $user->user_id.'/update_ajax') }}" method="POST" id="form-edit" enctype="multipart/form-data">
     @csrf
     @method('PUT')
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Edit Data User</h5>
-                <button type="button" class="close" data-dismiss="modal" aria
-                    label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -32,30 +34,39 @@
                     <select name="level_id" id="level_id" class="form-control" required>
                         <option value="">- Pilih Level -</option>
                         @foreach($level as $l)
-                        <option {{ ($l->level_id == $user->level_id)? 'selected' : '' }}
-                            value="{{ $l->level_id }}">{{ $l->level_nama }}</option>
+                        <option {{ ($l->level_id == $user->level_id)? 'selected' : '' }} value="{{ $l->level_id }}">{{ $l->level_nama }}</option>
                         @endforeach
                     </select>
                     <small id="error-level_id" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Username</label>
-                    <input value="{{ $user->username }}" type="text" name="username"
-                        id="username" class="form-control" required>
+                    <input value="{{ $user->username }}" type="text" name="username" id="username" class="form-control" required>
                     <small id="error-username" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Nama</label>
-                    <input value="{{ $user->nama }}" type="text" name="nama" id="nama"
-                        class="form-control" required>
+                    <input value="{{ $user->nama }}" type="text" name="nama" id="nama" class="form-control" required>
                     <small id="error-nama" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <input value="" type="password" name="password" id="password" class="form-control">
-                    <small class="form-text text-muted">Abaikan jika tidak ingin ubah
-                        password</small>
+                    <small class="form-text text-muted">Abaikan jika tidak ingin ubah password</small>
                     <small id="error-password" class="error-text form-text text-danger"></small>
+                </div>
+                <!-- Upload Foto -->
+                <div class="form-group">
+                    <label>Foto</label>
+                    <input type="file" name="foto" id="foto" class="form-control-file" accept="image/*">
+                    <small id="error-foto" class="error-text form-text text-danger"></small>
+                </div>
+                <div class="form-group">
+                    <label for="foto-preview">Preview Foto</label><br>
+                    <img id="foto-preview"
+                        src="{{ $user->foto ? asset('uploads/profile/' . $user->foto) : asset('images/default-avatar.png') }}"
+                        alt="Foto Profil"
+                        style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 1px solid #ddd; padding: 5px;">
                 </div>
             </div>
             <div class="modal-footer">
@@ -67,6 +78,15 @@
 </form>
 <script>
     $(document).ready(function() {
+        // Foto Preview saat memilih file
+        $('#foto').on('change', function() {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                $('#foto-preview').attr('src', e.target.result).show();
+            };
+            reader.readAsDataURL(this.files[0]);
+        });
+
         $("#form-edit").validate({
             rules: {
                 level_id: {
@@ -86,13 +106,18 @@
                 password: {
                     minlength: 6,
                     maxlength: 20
+                },
+                foto: {
+                    extension: "jpg|jpeg|png|gif"
                 }
             },
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,
                     type: form.method,
-                    data: $(form).serialize(),
+                    data: new FormData(form),
+                    processData: false,
+                    contentType: false,
                     success: function(response) {
                         if (response.status) {
                             $('#myModal').modal('hide');
